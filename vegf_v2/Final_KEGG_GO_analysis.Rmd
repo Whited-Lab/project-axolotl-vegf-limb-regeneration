@@ -1,0 +1,157 @@
+```{r}
+# Load packages
+suppressPackageStartupMessages(
+  {
+    library(tximport)
+    library(tidyverse)
+    library(DESeq2)
+    library(patchwork)
+    library(ggrepel)
+    library(latex2exp)
+    library(pheatmap)
+    library(RColorBrewer)
+    library(factoextra)
+    library(vsn)
+    library(xlsx)
+    library(openxlsx)
+    library(readr)
+    library(pathfindR)
+    library(data.table)
+    library(dplyr)
+    library(stringr)
+    library(clusterProfiler)
+    library(org.Hs.eg.db)
+    library(AnnotationDbi)
+    library(ggplot2)
+
+  }
+)
+```
+
+```{r}
+#Define functions
+
+format_t2g <- function(gene_name){
+  
+  #Collect all the name fragments that are pasted together at the end
+  assembly <- c()
+  
+  #Split a gene name like "string [nr]|string [hs]|transcript_id"
+  gene_name_split <- gene_name %>% str_split(pattern = "\\|", simplify = T) %>% .[. != ""]
+  
+  #Iterate over each element and test, if it references a species like [hs]
+  for (el in gene_name_split){
+    substring <- str_split(el, pattern = " ", simplify = T)
+    if (length(substring) > 1){
+      sub_1 <- substring[1]
+      sub_2 <- gsub('\\[|\\]', '', substring[2])
+      assembly <- c(assembly, paste0(sub_2,":",sub_1))      
+    } else {
+      assembly <- c(assembly, substring)
+    }
+  }
+ 
+  if (length(assembly) > 1){
+    return(paste(assembly, collapse = '_'))
+  } else {
+    return(assembly)
+  }
+  
+}
+```
+
+
+
+
+KEGG analysis
+
+```{r}
+
+# Specify the file path
+file_path <- "/n/whited_lab/Users/hsinger/illumina/018_illumina/5_analysis/FINAL_CODES/018_Illumina_res_g.rds"
+
+# Load the RDS file into an R object
+res_g <- readRDS(file_path)
+
+
+# Okay, pathfindR wants a table with 2 of three columns, possibly named Gene.symbol, logFC, and adj.P.Val  
+
+tidy.liv <- res_g[c("label","log2FoldChange","padj")]
+
+# options(digits=7)
+
+# Function to extract the desired substring
+extract_substring <- function(label) {
+  hs_match <- regmatches(label, regexec("hs:(.*?)(_|$)", label))
+  nr_match <- regmatches(label, regexec("nr:(.*?)(_|$)", label))
+  
+  if (!is.na(hs_match[[1]][2])) {
+    return(hs_match[[1]][2])
+  } else if (!is.na(nr_match[[1]][2])) {
+    return(nr_match[[1]][2])
+  } else if (grepl("_", label)) {
+    return(substring(label, 1, regexpr("_", label) - 1))
+  } else {
+    return(label)  # Return the original string if no "hs:" or "nr:" is found and no underscore is present
+  }
+}
+
+
+# Apply the function to create the new_label column
+tidy.liv <- tidy.liv %>% mutate(new_label = sapply(label, extract_substring))
+
+tidy.liv2 <- tidy.liv[c("new_label","log2FoldChange","padj")]
+
+
+pathfindR.liv <- data.table(tidy.liv2)
+
+pathwayAnalysis.liv <- run_pathfindR(pathfindR.liv,
+                                 min_gset_size = 5,
+                                 output_dir = "pathfindR_livOut")
+
+bubbleplot <- plot(enrichment_chart(result_df = pathwayAnalysis.liv, 
+                 top_terms = 40))
+bubbleplot_full <- plot(enrichment_chart(result_df = pathwayAnalysis.liv, 
+                 top_terms = 1000))
+gene_graph <- plot(term_gene_graph(result_df = pathwayAnalysis.liv, use_description = TRUE))
+
+heatmap <- plot(term_gene_heatmap(result_df = pathwayAnalysis.liv, genes_df = pathfindR.liv, use_description = TRUE, sort_terms_by_p = TRUE))
+
+
+
+pathwayAnalysis.liv
+#ggsave("KEGG_bubbleplot.pdf", plot = bubbleplot, width = 35, height = 20, units = "cm", limitsize = FALSE, bg = "white")
+#ggsave("KEGG_bubbleplot_full.pdf", plot = bubbleplot_full, width = 35, height = 75, units = "cm", limitsize = FALSE, bg = "white")
+#ggsave("KEGG_gene_graph.pdf", plot = gene_graph, width = 70, height = 45, units = "cm", limitsize = FALSE, bg = "white")
+#ggsave("KEGG_heatmap.pdf", plot = heatmap, width = 70, height = 45, units = "cm", limitsize = FALSE, bg = "white")
+
+#write.xlsx(pathwayAnalysis.liv, file = file.path(getwd(), "pathway_analysis_results.xlsx"), sheetName = "KEGG Analysis Table", rowNames = FALSE)
+
+```
+
+
+GO Analysis
+
+```{r}
+#genes_to_test <- rownames(sigs[sigs$log2FoldChange > 0.5,])
+
+genes_to_test <- tidy.liv2$new_label
+
+
+GO_results <- enrichGO(gene = genes_to_test, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "BP")
+
+as.data.frame(GO_results)
+
+
+fit_full <- plot(barplot(GO_results, showCategory = 100))
+fit <- plot(barplot(GO_results, showCategory = 25))
+
+#write.csv(GO_results, "GO_results.csv", row.names = FALSE)
+#ggsave("GO_full.pdf", plot = fit_full, width = 500, height = 250, units = "cm", limitsize = FALSE)
+#ggsave("GO_25.pdf", plot = fit, width = 40, height = 30, units = "cm", limitsize = FALSE)
+
+
+```
+
+
+
