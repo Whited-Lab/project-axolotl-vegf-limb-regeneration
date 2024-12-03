@@ -32,7 +32,6 @@ This repository contains scripts used for doi: https://doi.org/10.1101/2024.10.0
         2) uses GO analysis from KEGG data prep (tidy.liv2 object) to generate GO results table (GO_results.csv)
 
 
-
         
 
 
