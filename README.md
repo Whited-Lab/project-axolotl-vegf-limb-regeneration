@@ -1,6 +1,6 @@
 # project-axolotl-vegf-limb-regeneration
 
-This repository contains scripts used for doi: https://doi.org/10.1101/2024.10.01.616057 .
+This repository contains scripts used for doi: https://doi.org/10.1016/j.ydbio.2025.05.030 .
 
 ## Raw Data
 
