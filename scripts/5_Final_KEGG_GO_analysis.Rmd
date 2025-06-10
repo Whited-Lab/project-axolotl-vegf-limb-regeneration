@@ -29,6 +29,13 @@ suppressPackageStartupMessages(
 ```
 
 ```{r}
+
+if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()) {
+  this_file <- rstudioapi::getActiveDocumentContext()$path
+  setwd(dirname(this_file))
+}
+
+
 #Define functions
 
 format_t2g <- function(gene_name){
@@ -68,7 +75,7 @@ KEGG analysis
 ```{r}
 
 # Specify the file path
-file_path <- "/n/whited_lab/Users/hsinger/illumina/018_illumina/5_analysis/FINAL_CODES/018_Illumina_res_g.rds"
+file_path <- "./output/018_Illumina_res_g.rds"
 
 # Load the RDS file into an R object
 res_g <- readRDS(file_path)
@@ -120,12 +127,13 @@ heatmap <- plot(term_gene_heatmap(result_df = pathwayAnalysis.liv, genes_df = pa
 
 
 pathwayAnalysis.liv
-#ggsave("KEGG_bubbleplot.pdf", plot = bubbleplot, width = 35, height = 20, units = "cm", limitsize = FALSE, bg = "white")
-#ggsave("KEGG_bubbleplot_full.pdf", plot = bubbleplot_full, width = 35, height = 75, units = "cm", limitsize = FALSE, bg = "white")
-#ggsave("KEGG_gene_graph.pdf", plot = gene_graph, width = 70, height = 45, units = "cm", limitsize = FALSE, bg = "white")
-#ggsave("KEGG_heatmap.pdf", plot = heatmap, width = 70, height = 45, units = "cm", limitsize = FALSE, bg = "white")
 
-#write.xlsx(pathwayAnalysis.liv, file = file.path(getwd(), "pathway_analysis_results.xlsx"), sheetName = "KEGG Analysis Table", rowNames = FALSE)
+#ggsave("./output/KEGG_bubbleplot.pdf", plot = bubbleplot, width = 35, height = 20, units = "cm", limitsize = FALSE, bg = "white")
+#ggsave("./output/KEGG_bubbleplot_full.pdf", plot = bubbleplot_full, width = 35, height = 75, units = "cm", limitsize = FALSE, bg = "white")
+#ggsave("./output/KEGG_gene_graph.pdf", plot = gene_graph, width = 70, height = 45, units = "cm", limitsize = FALSE, bg = "white")
+#ggsave("./output/KEGG_heatmap.pdf", plot = heatmap, width = 70, height = 45, units = "cm", limitsize = FALSE, bg = "white")
+
+#write.xlsx(pathwayAnalysis.liv, file = "./output/pathway_analysis_results.xlsx", sheetName = "KEGG Analysis Table", rowNames = FALSE)
 
 ```
 
@@ -146,9 +154,9 @@ as.data.frame(GO_results)
 fit_full <- plot(barplot(GO_results, showCategory = 100))
 fit <- plot(barplot(GO_results, showCategory = 25))
 
-#write.csv(GO_results, "GO_results.csv", row.names = FALSE)
-#ggsave("GO_full.pdf", plot = fit_full, width = 500, height = 250, units = "cm", limitsize = FALSE)
-#ggsave("GO_25.pdf", plot = fit, width = 40, height = 30, units = "cm", limitsize = FALSE)
+#write.csv(GO_results, "./output/GO_results.csv", row.names = FALSE)
+#ggsave("./output/GO_full.pdf", plot = fit_full, width = 500, height = 250, units = "cm", limitsize = FALSE)
+#ggsave("./output/GO_25.pdf", plot = fit, width = 40, height = 30, units = "cm", limitsize = FALSE)
 
 
 ```

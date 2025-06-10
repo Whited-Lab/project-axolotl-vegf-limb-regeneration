@@ -29,6 +29,12 @@ Define functions
 
 ```{r}
 
+if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()) {
+  this_file <- rstudioapi::getActiveDocumentContext()$path
+  setwd(dirname(this_file))
+}
+
+
 format_t2g <- function(gene_name){
   
   #Collect all the name fragments that are pasted together at the end
@@ -85,7 +91,7 @@ Control vs AV951
 
 ```{r}
 # Load data
-data_dir <- "/n/whited_lab/Users/hsinger/illumina/018_illumina/4_alignment/"
+data_dir <- "../data/output"
 sample_sheet <- data.frame(Identifier = c("A01v1_A2_S1", "B01v1_C2_S2",
                                           "C01v1_D2_S3", "D01v1_F2_S4",
                                           "E01v1_G2_S5", "F01v1_I2_S6",
@@ -97,11 +103,11 @@ sample_sheet <- data.frame(Identifier = c("A01v1_A2_S1", "B01v1_C2_S2",
 sample_sheet <- sample_sheet %>% filter(SampleType %in% c("control", "av951"))
 
 
-subdir_names <- sapply(sample_sheet$Identifier, function(x) paste0("4_alignment/",x), USE.NAMES = F)
+subdir_names <- sapply(sample_sheet$Identifier, function(x) paste0("/",x), USE.NAMES = F)
 
 files <- file.path(data_dir, sample_sheet$Identifier, "abundance.h5")
 
-tx2gene <- read.csv("AmexT_v47-AmexG_v6.0-DD_t2g.tsv", sep = "\t", header = T)
+tx2gene <- read.csv("../ref/AmexT_v47-AmexG_v6.0-DD_t2g.tsv", sep = "\t", header = T)
 tx2gene$gene_name <- sapply(tx2gene$gene_name, format_t2g)
 
 txi_g  <- tximport(files, type="kallisto", tx2gene=tx2gene[,c("transcript_id", "gene_id")], importer=read.delim)
@@ -175,11 +181,14 @@ res_g_all <- res_g_all %>%
     }
   }))
 
+dir.create("./output", showWarnings = FALSE, recursive = TRUE)
+
 
 # save the Deseq2 DataSet
-#saveRDS(res_g,file = "018_Illumina_res_g.rds")
+#aveRDS(res_g,file = "./output/018_Illumina_res_g.rds")
+
 # save the Deseq2 DataSet
-#saveRDS(res_g_all,file = "018_Illumina_res_g_all.rds")
+#saveRDS(res_g_all,file = "./output/018_Illumina_res_g_all.rds")
 
 
 ```
@@ -223,8 +232,8 @@ data_g$color_label <- factor(data_g$color, levels = c("indianred1",  "#00AFBB", 
                              labels = c("Upregulated", "Downregulated", "Not Significant" ))
 
 
-gene_list <- read.table("volcano_gene_amexid.txt", header = FALSE, sep = "\t")
-gene_names <- read.table("volcano_gene_names.txt", header = FALSE, sep = "\t")
+gene_list <- read.table("../ref/volcano_gene_amexid.txt", header = FALSE, sep = "\t")
+gene_names <- read.table("../ref/volcano_gene_names.txt", header = FALSE, sep = "\t")
 combined_gene_list <- cbind(gene_list, gene_names)
 
 # Rename the columns for clarity
@@ -290,7 +299,7 @@ v_g <- ggplot(data = data_g, aes(x = log2FC, y = padj)) +
 
 v_g
 
-#ggsave("Illumina_018_volcano_control_vs_av951.pdf", plot = v_g, device = "pdf", width = 10, height = 7)
+#ggsave("./output/Illumina_018_volcano_control_vs_av951.pdf", plot = v_g, device = "pdf", width = 10, height = 7)
 
 ```
 
@@ -408,7 +417,7 @@ rownames(dg_v3) <- make.unique(rownames(dg_v3), sep = ".")
 
 
 #OPTIONAL: choose genes to highlight
-gene_list_v3 <- read.csv("heatmap_gene_list_v3.csv") %>%
+gene_list_v3 <- read.csv("../ref/heatmap_gene_list_v3.csv") %>%
   select(1:1) 
 colnames(gene_list_v3) <- c('gene_name')
 highlight_genes <- gene_list_v3$gene_name
@@ -465,7 +474,7 @@ heatmap_g_full <- pheatmap(dg_v3,
                            )
 
 # Save the heatmap (if needed)
-#ggsave("heatmap_full_v5_highlight.pdf", plot = heatmap_g_full, device = "pdf")
+#ggsave("./output/heatmap_full_v5_highlight.pdf", plot = heatmap_g_full, device = "pdf")
 
 
 
@@ -475,11 +484,11 @@ heatmap_g_full <- pheatmap(dg_v3,
 # Print the highlighted genes order
 highlighted_genes_order <- rownames(dg_v3)[annotation_row$Highlight == "highlight"]
 print(highlighted_genes_order)
-#write.csv(highlighted_genes_order, "highlighted_genes_order_v5.csv", row.names = FALSE)
+#write.csv(highlighted_genes_order, "./output/highlighted_genes_order_v5.csv", row.names = FALSE)
 
 
 # Save the result object as an Excel sheet
-write_xlsx(result, "deseq_result_sig.xlsx")
+#write_xlsx(result, "./output/deseq_result_sig.xlsx")
 
 ```
 
@@ -545,7 +554,7 @@ pca_g <- DESeq2::plotPCA(vsd_g, intgroup=c("SampleType"), ntop = 1000) +
 
 pca_g
 
-#ggsave(PCA.pdf"), plot = pca_g, device = "pdf", width = 5, height = 5)
+#ggsave("./output/PCA.pdf", plot = pca_g, device = "pdf", width = 5, height = 5)
 ```
 
 
@@ -630,7 +639,7 @@ loadings_pc1_g <- ggplot(data = d_pca_g, aes(x = label, y = loadings_pc1_g, fill
 
 loadings_pc1_g
 
-#ggsave(("PCA_loadings_pc1.pdf"), plot = loadings_pc1_g, device = "pdf", height = 5, width = 10)
+#ggsave(("./output/PCA_loadings_pc1.pdf"), plot = loadings_pc1_g, device = "pdf", height = 5, width = 10)
        
 ```
 
@@ -712,7 +721,7 @@ loadings_pc2_g <- ggplot(data = d_pca_g, aes(x = label, y = loadings_pc2_g, fill
 
 loadings_pc2_g
 
-#ggsave(("PCA_loadings_pc2.pdf"), plot = loadings_pc2_g, device = "pdf", height = 5, width = 10)
+#ggsave(("./output/PCA_loadings_pc2.pdf"), plot = loadings_pc2_g, device = "pdf", height = 5, width = 10)
 
 ```
 
