@@ -2,10 +2,12 @@
 
 ## Introduction
 
-This repository contains scripts used for doi: https://doi.org/10.1016/j.ydbio.2025.05.030 . To run the analysis, download this repo and follow "## To Run Analysis Pipeline" steps below. Scripts have been designed to download all necessary data into the directory structure of this repo.
+This repository contains scripts used for: 
+    Savage, Aaron M., et al. “VEGF signaling promotes blastema growth and proliferation of vascular and non-vascular cells during axolotl limb regeneration.” Developmental Biology, June 2025, https://doi.org/10.1016/j.ydbio.2025.05.030. 
+
+To run the analysis, download this repo and follow "## To Run Analysis Pipeline" steps below. All scripts have been designed to download any necessary data into the directory structure of this repo.
 
 Computational work was performed using the resources of the Harvard University Faculty of Arts and Sciences Research Computing (FASRC) cluster in 2024. 
- 
 
 ## Raw Data Sources
 
@@ -44,7 +46,7 @@ Computational work was performed using the resources of the Harvard University F
 
 ## Further Info
 
-Three replicates were collected for each condition as follows (note that DAPT samples are removed from analysis) : 
+Three replicates were collected for each condition as follows (note that DAPT samples are removed from analysis): 
 
     DAPT treated = "A01v1_A2_S1", "B01v1_C2_S2", "C01v1_D2_S3" 
     AV951 treated = "D01v1_F2_S4", "E01v1_G2_S5", "F01v1_I2_S6" 
@@ -56,19 +58,13 @@ Three replicates were collected for each condition as follows (note that DAPT sa
 This repository is maintained by members of the Whited Lab at Harvard University Department of Stem Cell and Regenerative Biology.
 
 Creator/Contact:
-    Name: Hani Singer
-    Email: hani_singer@fas.harvard.edu
-    Role: Laoratory Research Manager
+Name: Hani Singer
+Email: hani_singer@fas.harvard.edu
+Role: Laoratory Research Manager
 
 Principal Investigator:
-    Name: Jessica L. Whited
-    Lab Website: www.whitedlab.com
-    Lab Email: whitedlab@gmail.com
+Name: Jessica L. Whited
+Lab Website: www.whitedlab.com
+Lab Email: whitedlab@gmail.com
 
 For questions, bug reports, or contributions, please open an Issue or contact us via email.
-
-
-## Citation
-
-Savage, Aaron M., et al. “VEGF signaling promotes blastema growth and proliferation of vascular and non-vascular cells during axolotl limb regeneration.” Developmental Biology, June 2025, https://doi.org/10.1016/j.ydbio.2025.05.030. 
-
