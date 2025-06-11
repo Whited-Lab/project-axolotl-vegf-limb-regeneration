@@ -74,14 +74,19 @@ Run `./scripts/5_Final_KEGG_GO_analysis.Rmd` which will output KEGG and GO analy
 
 This repository is maintained by members of the **Whited Lab** at the **Harvard University Department of Stem Cell and Regenerative Biology**.
 
-**Creator / Contact**  
+**Creator / Main Contact**  
 - **Name:** Hani Singer  
 - **Email:** [hani_singer@fas.harvard.edu](mailto:hani_singer@fas.harvard.edu)  
-- **Role:** Laboratory Research Manager  
+- **Role:** Whited Laboratory & Bioinformatics Research Manager
+
+**Author Contact**  
+- **Name:** Dr. Aaron Savage
+- **Email:** [aaron.savage1@nottingham.ac.uk](mailto:aaron.savage1@nottingham.ac.uk)  
+- **Role:** Project Lead Scientist
 
 **Principal Investigator**  
 - **Name:** Dr. Jessica L. Whited  
 - **Lab Website:** [www.whitedlab.com](http://www.whitedlab.com)  
-- **Email:** [whitedlab@gmail.com](mailto:whitedlab@gmail.com)
+- **Lab Email:** [whitedlab@gmail.com](mailto:whitedlab@gmail.com)
 
 For questions, bug reports, or contributions, please [open an Issue](https://github.com/Whited-Lab/project-axolotl-vegf-limb-regeneration/issues) or contact us via email.
