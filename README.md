@@ -9,7 +9,7 @@ This repository contains analysis scripts for the publication:
 
 To reproduce the analysis, download this repository and follow the steps in **"To Run Analysis Pipeline"** below. All scripts are designed to automatically download required data into the expected folder structure.
 
-> Computational analysis was performed using the [Harvard FASRC Cluster](https://www.rc.fas.harvard.edu/) in 2024.
+Computational analysis was performed using the [Harvard FASRC Cluster](https://www.rc.fas.harvard.edu/) in 2024.
 
 ---
 
@@ -23,10 +23,10 @@ To reproduce the analysis, download this repository and follow the steps in **"T
   AmexT_v47 from [https://www.axolotl-omics.org/assemblies](https://www.axolotl-omics.org/assemblies)
 
 - **Quantification tool**  
-  [`kallisto v0.48.0`](https://pachterlab.github.io/kallisto/about.html) used via Singularity container (`kallisto_ubuntu-22.04.sif`), automatically downloaded into `./bin/` during Step 1 below.
+  [`kallisto v0.48.0`](https://pachterlab.github.io/kallisto/about.html) used via Singularity container (`kallisto_ubuntu-22.04.sif`), automatically downloaded into `./bin/` from Harvard Dataverse through Step 1 below.
 
 - **Precomputed results**  
-  See `/supplementary_files/` for DESeq2, KEGG, and GO output tables and plots.
+  See `./supplementary_files/` for DESeq2, KEGG, and GO output tables and plots.
 
 
 ---
@@ -38,22 +38,22 @@ To reproduce the analysis, download this repository and follow the steps in **"T
 From the `./scripts` directory, run scripts 0-3 to download the data, prepare the references and align/quantify 
 
 ### 2. DESeq2 Differential Expression 
-In `./scripts` run `4_Final_DEG_Volcano_Heatmap_PCA.Rmd` which will output DESeq analysis, volcano/heatmap plots and tables to `./scripts/output/`
+Run `./scripts/4_Final_DEG_Volcano_Heatmap_PCA.Rmd` which will output DESeq analysis, volcano/heatmap plots and tables to `./scripts/output/`
 
-- uses DESeq2 to generate DE results table (deseq_result_sig.xlsx)
+- uses DESeq2 to generate DE results table (`deseq_result_sig.xlsx`)
 
-- volcano plots with annotated genes (volcano_gene_names.txt / volcano_gene_amexid.txt)
+- volcano plots with annotated genes (sourced from `volcano_gene_names.txt` & `volcano_gene_amexid.txt`)
 
-- heatmaps with annotated genes (heatmap_gene_list_v3.csv)
+- heatmaps with annotated genes (sourced from `heatmap_gene_list_v3.csv`)
 
 - PCA plots
 
 ### 3. KEGG/GO Analysis
-In `./scripts` run `5_Final_KEGG_GO_analysis.Rmd` which will output KEGG and GO analysis to `./scripts/output/`
+Run `./scripts/5_Final_KEGG_GO_analysis.Rmd` which will output KEGG and GO analysis to `./scripts/output/`
 
-- uses KEGG analysis from `018_Illumina_res_g.rds` object (generated in Final_DEG_Volcano_Heatmap_PCA.Rmd as res_g) to generate pathway analysis table `pathway_analysis_results.xlsx`
+- uses KEGG analysis from `018_Illumina_res_g.rds` object (generated in `4_Final_DEG_Volcano_Heatmap_PCA.Rmd` as "res_g") to generate pathway analysis table `pathway_analysis_results.xlsx`
 
-- uses GO analysis from KEGG data prep (tidy.liv2 object) to generate GO results table (GO_results.csv)
+- uses GO analysis from KEGG data prep ("tidy.liv2" object) to generate GO results table (`GO_results.csv`)
 
 ---
 
@@ -62,11 +62,11 @@ In `./scripts` run `5_Final_KEGG_GO_analysis.Rmd` which will output KEGG and GO 
 
 | Condition      | Samples                                  |
 |----------------|-------------------------------------------|
-| **DAPT treated**   | A01v1_A2_S1, B01v1_C2_S2, C01v1_D2_S3 *(excluded)* |
+| **DAPT treated**  | A01v1_A2_S1, B01v1_C2_S2, C01v1_D2_S3 |
 | **AV951 treated**  | D01v1_F2_S4, E01v1_G2_S5, F01v1_I2_S6   |
 | **Control**        | G01v1_M2_S7, H01v1_N2_S8, A02v1_O2_S9   |
 
-DAPT-treated samples were excluded from downstream analysis.
+*Note: DAPT-treated samples were excluded from downstream analysis*
 
 ---
 
